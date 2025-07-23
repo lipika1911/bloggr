@@ -13,4 +13,3 @@ const Blog = mongoose.model('blog',blogSchema);
 
 export default Blog;
 
-
