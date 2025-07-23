@@ -57,3 +57,79 @@ export const addBlog = async(req,res) => {
         })
     }
 }
+
+export const getAllBlogs = async(req,res) => {
+    try {
+        const blogs = await Blog.find({isPublished: true})
+        return res.status(200).json({
+            success: true,
+            message: "Blogs fetched successfully!",
+            blogs
+        })
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+export const getBlogById = async(req,res) => {
+    try {
+        const {blogId} = req.params;
+        const blog = await Blog.findById(blogId)
+        if(!blog){
+            return res.status(400).json({
+                success: false,
+                message: "Blog not found!"
+            })
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Blog fetched!",
+            blog
+        })
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+export const deleteBlogById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Blog.findByIdAndDelete(id);
+    return res.status(200).json({
+      success: true,
+      message: "Blog deleted successfully!",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const togglePublish = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const blog = await Blog.findById(id);
+    if (!blog) {
+      return res.status(404).json({ success: false, message: "Blog not found" });
+    }
+    blog.isPublished = !blog.isPublished;
+    await blog.save();
+    return res.status(200).json({
+      success: true,
+      message: "Blog status updated!",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
