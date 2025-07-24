@@ -102,6 +102,10 @@ export const deleteBlogById = async (req, res) => {
   try {
     const { id } = req.params;
     await Blog.findByIdAndDelete(id);
+
+    //delete all comments associated with this blog
+    await Comment.deleteMany({blog: id});
+
     return res.status(200).json({
       success: true,
       message: "Blog deleted successfully!",
