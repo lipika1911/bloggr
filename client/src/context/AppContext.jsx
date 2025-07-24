@@ -30,7 +30,7 @@ export const AppProvider = ({ children }) => {
       setToken(tokenFromStorage);
       axios.defaults.headers.common['Authorization'] = `Bearer ${tokenFromStorage}`;
     }
-  }, []);
+  }, [setBlogs]);
 
   const value = {
     axios,

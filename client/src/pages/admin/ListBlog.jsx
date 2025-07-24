@@ -42,7 +42,7 @@ const ListBlog = () => {
             </thead>
             <tbody>
               {blogs.map((blog,index)=>{
-                return <BlogTableItem key={blog._id} blog={blog} fetchBlogs={fetchBlogs} index={index+1} />
+                return <BlogTableItem key={blog._id} blog={blog} fetchBlogs={fetchBlogs} index={index+1} showDelete={true}/>
               })}
             </tbody>
           </table>
