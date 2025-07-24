@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { comments_data } from '../../assets/assets'
 import CommentTableItem from '../../components/admin/CommentTableItem'
+import { useAppContext } from '../../context/AppContext';
+import toast from 'react-hot-toast';
 
 const Comments = () => {
   const [comments, setComments] = useState([])
   const [filter, setFilter] = useState('Not Approved')
 
+  const {axios} = useAppContext();
+
   const fetchComments = async() => {
-    setComments(comments_data);
+    try {
+      const {data} = await axios.get('/api/admin/comments');
+      data.success ? setComments(data.comments) :
+      toast.error(error.response?.data?.message || 'Something went wrong');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Something went wrong');
+    }
   }
 
   useEffect(()=>{
@@ -19,8 +29,8 @@ const Comments = () => {
       <div className='flex justify-between items-center max-w-3xl'>
         <h1>Comments</h1>
         <div className='flex gap-4'>
-          <button onClick={()=>setFilter('Approved')} className={`shadow-custom-sm border rounded-full px-4 py-1 cursor-pointer text-xs ${filter === 'Approved' ? 'text-primary' : 'text-gray-700'}`}>Approved</button>
-          <button onClick={()=>setFilter('Not Approved')} className={`shadow-custom-sm border rounded-full px-4 py-1 cursor-pointer text-xs ${filter === 'Not Approved' ? 'text-primary' : 'text-gray-700'}`}> Not Approved</button>
+          <button onClick={()=>setFilter('Approved')} className={`shadow-custom-sm border rounded-full px-4 py-1 cursor-pointer text-sm ${filter === 'Approved' ? 'bg-primary border-none text-white' : 'text-gray-700'}`}>Approved</button>
+          <button onClick={()=>setFilter('Not Approved')} className={`shadow-custom-sm border rounded-full px-4 py-1 cursor-pointer text-sm ${filter === 'Not Approved' ? 'bg-primary border-none text-white' : 'text-gray-700'}`}> Not Approved</button>
         </div>
       </div>
       <div className='relative h-4/5 max-w-3xl overflow-x-auto mt-4 bg-white shadow rounded-lg scrollbar-hide'>
