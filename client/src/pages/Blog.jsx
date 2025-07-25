@@ -21,8 +21,11 @@ const Blog = () => {
     const fetchBlogData = async() => {
         try {
             const {data} = await axios.get(`/api/blog/${id}`);
-            data.success ? setData(data.blog) :
-            toast.error(error.response?.data?.message || 'Something went wrong');
+            if(data.success){
+                setData(data.blog);
+            }else{
+                toast.error(error.response?.data?.message || 'Something went wrong');
+            }
         } catch (error) {
             toast.error(error.response?.data?.message || 'Something went wrong');
         }
@@ -70,7 +73,7 @@ const Blog = () => {
             <p className='text-primary py-4 font-medium'>Published on {Moment(data.createdAt).format('MMMM Do YYYY')}</p>
             <h1 className='text-2xl sm:text-5xl font-semibold max-w-2xl mx-auto text-gray-800'>{data.title}</h1>
             <h2 className='my-5 max-w-lg truncate mx-auto'>{data.subTitle.replace(/<[^>]+>/g, '')}</h2>
-            <p className='inline-block py-1 px-4 rounded-full mb-6 border text-sm border-primary/35 bg-primary/5 font-medium text-primary'>Michael Brown</p>
+            <p className='inline-block py-1 px-4 rounded-full mb-6 border text-sm border-primary/35 bg-primary/5 font-medium text-primary'>{data.author?.firstName} {data.author?.lastName}</p>
         </div>
         <div className='mx-5 max-w-5xl md:mx-auto my-10 mt-6'>
             <img src={data.image} alt="" className='rounded-3xl mb-5'/>

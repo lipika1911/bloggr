@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState({
-    blog: 0,
+    blogs: 0,
     comments: 0,
     drafts: 0,
     recentBlogs: []

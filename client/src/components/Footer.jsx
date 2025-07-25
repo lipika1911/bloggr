@@ -1,12 +1,14 @@
 import React from 'react'
 import {assets, footer_data} from '../assets/assets'
+import { useAppContext } from '../context/AppContext'
 
 const Footer = () => {
+    const {navigate} = useAppContext();
   return (
     <div className='px-6 md:px-16 lg:px-24 xl:px-32 bg-primary/3'>
         <div className='flex flex-col md:flex-row items-start justify-between gap-10 py-10 border-b border-gray-500/30 text-gray-500'>
             <div>
-                <img src={assets.logo} alt="logo" className='w-32 sm:w-44'/>
+                <img onClick={()=>navigate('/')} src={assets.logo} alt="logo" className='w-32 sm:w-44 cursor-pointer'/>
                 <p className='max-w-[410px] mt-6'>
                     Discover a space where ideas come alive. Share your stories, voice your opinions, and connect with a community of passionate readers and writers.
                 </p>

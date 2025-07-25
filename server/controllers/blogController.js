@@ -8,6 +8,7 @@ export const addBlog = async(req,res) => {
     try {
         const {title, subTitle, description, category, isPublished} = JSON.parse(req.body.blog);
         const imageFile = req.file;
+        const author = req.user.id;
 
         //check if all fields are present
         if(!title || !subTitle || !description || !category || !imageFile){
@@ -44,7 +45,8 @@ export const addBlog = async(req,res) => {
             description,
             category, 
             image,
-            isPublished
+            isPublished,
+            author
         })
 
         return res.status(200).json({
@@ -76,28 +78,32 @@ export const getAllBlogs = async(req,res) => {
     }
 }
 
-export const getBlogById = async(req,res) => {
-    try {
-        const {blogId} = req.params;
-        const blog = await Blog.findById(blogId)
-        if(!blog){
-            return res.status(400).json({
-                success: false,
-                message: "Blog not found!"
-            })
-        }
-        return res.status(200).json({
-            success: true,
-            message: "Blog fetched!",
-            blog
-        })
-    } catch (error) {
-        return res.status(400).json({
-            success: false,
-            message: error.message
-        })
+export const getBlogById = async (req, res) => {
+  try {
+    const { blogId } = req.params;
+
+    const blog = await Blog.findById(blogId)
+      .populate('author', 'firstName lastName');
+
+    if (!blog) {
+      return res.status(400).json({
+        success: false,
+        message: "Blog not found!"
+      });
     }
-}
+
+    return res.status(200).json({
+      success: true,
+      message: "Blog fetched!",
+      blog
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 
 export const deleteBlogById = async (req, res) => {
   try {
@@ -178,7 +184,7 @@ export const getBlogComments = async(req,res) => {
 export const generateContent = async(req,res) => {
     try {
         const {prompt} = req.body;
-        const content = await main(prompt + '. Write a full blog post on this topic. Just return the blog content only in rich text format.');
+        const content = await main(prompt + '. Write a full blog post on this topic. Just return the full blog content only in rich text format.');
         return res.status(200).json({
             success: true,
             message: 'Content Generated successfully!',
